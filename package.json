@@ -15,6 +15,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@candypay/checkout-sdk": "^0.1.56",
     "@solana/spl-name-service": "^0.1.4",
     "@solana/spl-token": "^0.3.7",
     "@solana/wallet-adapter-base": "^0.9.20",
