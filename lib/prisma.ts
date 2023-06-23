@@ -6,6 +6,6 @@ import { PrismaClient } from "@prisma/client";
 // Learn more:
 // https://pris.ly/d/help/next-js-best-practices
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
-export default prisma
+export default prisma;
