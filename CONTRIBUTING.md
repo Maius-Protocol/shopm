@@ -42,11 +42,11 @@ Please open an issue with a proposal for a new feature or refactoring before sta
 
 ## Submitting Changes
 
-*   Open a new issue in the [Issue tracker](https://github.com/aeminium-labs/nextjs-solana-starter-kit/issues).
-*   Fork the repo.
-*   Create a new feature branch based off the `main` branch.
-*   Make sure there are no linting errors.
-*   Submit a pull request, referencing any issues it addresses.
+- Open a new issue in the [Issue tracker](https://github.com/aeminium-labs/nextjs-solana-starter-kit/issues).
+- Fork the repo.
+- Create a new feature branch based off the `main` branch.
+- Make sure there are no linting errors.
+- Submit a pull request, referencing any issues it addresses.
 
 Please try to keep your pull request focused in scope and avoid including unrelated commits.
 

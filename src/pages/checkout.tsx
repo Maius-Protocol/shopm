@@ -12,7 +12,7 @@ const Checkout: NextPage = () => {
       method: "POST",
     });
     const data = await response.json();
-    console.log(data)
+    console.log(data);
     router.push(data.payment_url);
     setIsLoading(false);
   };
@@ -20,9 +20,7 @@ const Checkout: NextPage = () => {
   return (
     <main>
       <p>Welcome to Gumsol.</p>
-      <button onClick={createSession}>
-        Checkout
-      </button>
+      <button onClick={createSession}>Checkout</button>
     </main>
   );
 };
