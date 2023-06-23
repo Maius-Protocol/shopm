@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import sdk from "../service/candy-pay/candypay";
+import sdk from "../../service/candy-pay/candypay";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "POST") {
