@@ -11,7 +11,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         headers: headers as Record<string, string>,
         webhook_secret: process.env.WEBHOOK_SECRET!,
       });
-      res.status(200).json({message: "success"})
+      console.log(payload);
+      res.status(200).json({ message: "success" });
     } catch (error) {
       res.status(400).json({
         message: "Invalid webhook signature",
