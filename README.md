@@ -46,7 +46,6 @@ Not just that but they also parse and format the data in a much more readable wa
 
 In this template we're using Helius API to retrieve the list of NFTs in your wallet, but you can use that example to get other data from their multiple endpoints. Neat!
 
-
 ### **🎨 Build your own style**
 
 This templates uses [Tailwind CSS](https://tailwindcss.com/) and [daisyUI](https://daisyui.com/) for rapid development. This allows you to quickly iterate and build any kind of dApp with pre-defined or custom themes.
