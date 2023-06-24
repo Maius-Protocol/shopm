@@ -1,10 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import sdk from "../../service/candy-pay/candypay";
+import sdk, { getSdk } from "../../service/candy-pay/candypay";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "POST") {
         try {
-            const response = await sdk.session.create({
+            const { shopId } = req.body
+            const sdk = await getSdk(shopId)
+            const response = await sdk!.session.create({
                 success_url: "http://localhost:3000/success",
                 cancel_url: "http://localhost:3000/cancel",
                 // additional tokens you can pass, SOL and USDC are default
@@ -20,13 +22,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                         size: "9",
                     },
                 ],
-                shipping_fees: 0.5,
             });
 
             res.status(200).json(response);
         } catch (error) {
-            console.log(error);
-
             res.status(500).json({
                 error: "Error creating session",
             });
