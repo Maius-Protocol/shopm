@@ -13,7 +13,7 @@ const Checkout: NextPage = () => {
     const response = await fetch("/api/create-session", {
       method: "POST",
       body: JSON.stringify({
-        shopId: product.shop_id
+        shopId: product?.shop_id
       })
     });
     const data = await response.json();
