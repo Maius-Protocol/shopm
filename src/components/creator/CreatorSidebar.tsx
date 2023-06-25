@@ -1,4 +1,5 @@
 import { FC } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import cx from "classnames";
 import { Layout } from "antd";
@@ -9,7 +10,7 @@ const { Sider } = Layout;
 
 interface SiderItemProps {
   name: string;
-  url: string;
+  path: string;
   Icon: IconType;
 }
 
@@ -17,20 +18,20 @@ export const CreatorSidebar = () => {
   return (
     <Sider className="!bg-black h-full">
       <header className="uppercase py-12 px-6 border-b border-[#f4f4f4]">
-        <a href="/creator" className="text-white hover:text-white text-3xl">
+        <Link href="/creator" className="text-white hover:text-white text-3xl">
           Shopm
-        </a>
+        </Link>
       </header>
       <div>
-        <SiderItem name="Home" url="/creator" Icon={RiHome2Fill} />
+        <SiderItem name="Home" path="/creator" Icon={RiHome2Fill} />
         <SiderItem
           name="Products"
-          url="/creator/products"
+          path="/creator/products"
           Icon={RiArchiveFill}
         />
         <SiderItem
           name="Settings"
-          url="/creator/settings"
+          path="/creator/settings"
           Icon={RiSettings4Fill}
         />
       </div>
@@ -38,19 +39,20 @@ export const CreatorSidebar = () => {
   );
 };
 
-const SiderItem: FC<SiderItemProps> = ({ name, url, Icon }) => {
+const SiderItem: FC<SiderItemProps> = ({ name, path, Icon }) => {
   const router = useRouter();
+  console.log("router :", router.pathname);
   return (
-    <a
-      href={url}
+    <Link
+      href={path}
       className={cx(
         "text-white hover:text-[#ff8fe7] px-6 py-4 border-b border-[#f4f4f4]",
         "flex items-center gap-4",
-        { "text-[#ff8fe7]": router.pathname === url }
+        { "!text-[#ff8fe7]": router.pathname === path }
       )}
     >
       <Icon size={25} />
       <span>{name}</span>
-    </a>
+    </Link>
   );
 };
