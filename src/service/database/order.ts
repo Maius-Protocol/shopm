@@ -1,5 +1,6 @@
 import prisma from "../../../lib/prisma";
 import { or } from "multiformats/bases/base";
+import { generateId } from "../snowflake/generate-id";
 
 export const createOrder = async (
   shopId: string,
@@ -7,8 +8,10 @@ export const createOrder = async (
   sessionId: string,
   status: string
 ) => {
+  const id = await generateId();
   const order = await prisma.order.create({
     data: {
+      id: id,
       shop_id: shopId,
       product_id: productId,
       session_id: sessionId,
