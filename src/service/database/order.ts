@@ -39,6 +39,15 @@ export const getOrderByProuctId = async (productId: any) => {
   return orders;
 };
 
+export const getOrderBySessionId = async (sessionId: any) => {
+  const orders = await prisma.order.findMany({
+    where: {
+      session_id: sessionId,
+    },
+  });
+  return orders;
+};
+
 export const getOrder = async (id: any) => {
   const order = await prisma.order.findFirst({
     where: {
