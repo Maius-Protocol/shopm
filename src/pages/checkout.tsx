@@ -29,8 +29,7 @@ const Checkout: NextPage = () => {
         status: "pending",
       }),
     });
-    console.log(await responseOrder.json());
-    // router.push(data.payment_url);
+    router.push(data.payment_url);
     setIsLoading(false);
   };
 
