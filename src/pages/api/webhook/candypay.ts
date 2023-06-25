@@ -1,8 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { verifyWebhookSignature } from "@candypay/checkout-sdk";
 import { sendEmail } from "../../../service/mail/mail";
-import { getOrder, getOrderBySessionId } from "../../../service/database/order";
+import {
+  getOrder,
+  getOrderBySessionId,
+  updateOrder,
+} from "../../../service/database/order";
 import verifyEmailTemplate from "../../../template/verifyTemplate";
+import { onErrorResumeNext } from "rxjs";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const headers = req.headers;
@@ -26,7 +31,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         subject: `Order ${orderId} confirmed`,
         html: emailTemplate.html,
       });
-
+      const orders = await getOrderBySessionId(payload.session_id);
+      await Promise.all(
+        orders.map(async (order) => {
+          const orderNew = await updateOrder(order.id, { status: "success" });
+          console.log(orderNew);
+        })
+      );
       res.status(200).json({ message: "success" });
     } catch (error) {
       res.status(400).json({
