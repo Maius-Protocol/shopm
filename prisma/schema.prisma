@@ -1,5 +1,5 @@
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -8,14 +8,14 @@ generator client {
 }
 
 model Shop {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  email     String  @unique
+  id        String  @unique
+  email     String
   name      String?
   publicKey String?
 }
 
 model Product {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String @unique
   shop_id     String
   name        String
   description String
@@ -27,7 +27,7 @@ model Product {
 }
 
 model Order {
-  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  id         String @unique
   shop_id    String
   session_id String
   product_id String
@@ -35,7 +35,7 @@ model Order {
 }
 
 model Payment {
-  id                    String @id @default(auto()) @map("_id") @db.ObjectId
+  id                    String @unique
   shop_id               String
   candy_pay_public_key  String
   candy_pay_private_key String

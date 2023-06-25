@@ -6,7 +6,7 @@ import { Button } from "antd";
 const Checkout: NextPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const productId = "64973d0c19bede09019caa1a";
+  const productId = "328074440179056640";
   const createSession = async () => {
     setIsLoading(true);
     const responseProduct = await fetch(`/api/shop/product?id=${productId}`, {

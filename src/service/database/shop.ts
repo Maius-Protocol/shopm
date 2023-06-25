@@ -1,53 +1,59 @@
-import prisma from '../../../lib/prisma'
+import prisma from "../../../lib/prisma";
+import { generateId } from "../snowflake/generate-id";
 
 export const getAllShops = async () => {
-  const shops = await prisma.shop.findMany({})
-  return shops
-}
+  const shops = await prisma.shop.findMany({});
+  return shops;
+};
 
 export const getShop = async (id: any) => {
   const shop = await prisma.shop.findUnique({
-    where: { id }
-  })
-  return shop
-}
+    where: { id },
+  });
+  return shop;
+};
 
-export const createShop = async (email: string, name: string, publicKey: string) => {
+export const createShop = async (
+  email: string,
+  name: string,
+  publicKey: string
+) => {
+  const id = await generateId();
   const shop = await prisma.shop.create({
     data: {
+      id: id,
       email,
       name,
       publicKey,
-    }
-  })
-  return shop
-}
-
+    },
+  });
+  return shop;
+};
 
 export const getShopByPublicKey = async (publicKey: any) => {
   const shop = await prisma.shop.findFirst({
-    where: { publicKey: publicKey }
-  })
-  return shop
-}
+    where: { publicKey: publicKey },
+  });
+  return shop;
+};
 
 export const updateShop = async (id: any, updateData: any) => {
   const shop = await prisma.shop.update({
     where: {
-      id
+      id,
     },
     data: {
-      ...updateData
-    }
-  })
-  return shop
-}
+      ...updateData,
+    },
+  });
+  return shop;
+};
 
 export const deleteShop = async (id: any) => {
   const shop = await prisma.shop.delete({
     where: {
-      id
-    }
-  })
-  return shop
-}
+      id,
+    },
+  });
+  return shop;
+};
