@@ -4,14 +4,14 @@ import {
   getAllShops,
   getShop,
   getShopByPublicKey,
-} from "../../../service/database/shop";
+} from "../../../../service/database/shop";
 import {
   createProduct,
   getAllProduct,
   getProduct,
   getProductByShopId,
   updateProduct,
-} from "../../../service/database/product";
+} from "../../../../service/database/product";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -26,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           quantity,
           image,
           linkS3,
-        } = req.body;
+        } = JSON.parse(req.body);
         const shop = await createProduct(
           shopId,
           name,
@@ -37,7 +37,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           image,
           linkS3
         );
-        res.status(200).json(shop);
+        return res.status(200).json(shop);
       }
       case "GET": {
         if (req.query.id) {
@@ -54,14 +54,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       case "PUT": {
         const { id, ...updateData } = req.body;
         const product = await updateProduct(id, updateData);
-        res.status(200).json(product);
+        return res.status(200).json(product);
       }
       default:
         return res.status(200);
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", error: error });
-    return;
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error });
   }
 };
 
