@@ -60,3 +60,22 @@ code {
   border-right-color: #eed;
   border-top-color: #ccb;
 }
+
+/* Override antd styles */
+
+.ant-card-head {
+  @apply !border-b-0 !pb-0 !pt-4 !min-h-min;
+}
+
+.ant-card-body {
+  @apply !pt-1.5 !pb-4;
+}
+
+.ant-table {
+  @apply border-t border-x border-black
+  !rounded;
+}
+
+.ant-table-cell {
+  @apply !border-black;
+}

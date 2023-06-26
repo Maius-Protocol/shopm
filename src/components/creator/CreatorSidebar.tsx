@@ -18,7 +18,7 @@ export const CreatorSidebar = () => {
   return (
     <Sider className="!bg-black h-full">
       <header className="uppercase py-12 px-6 border-b border-[#f4f4f4]">
-        <Link href="/creator" className="text-white hover:text-white text-3xl">
+        <Link href="/creator" className="text-white hover:text-white text-4xl">
           Shopm
         </Link>
       </header>
@@ -41,14 +41,13 @@ export const CreatorSidebar = () => {
 
 const SiderItem: FC<SiderItemProps> = ({ name, path, Icon }) => {
   const router = useRouter();
-  console.log("router :", router.pathname);
   return (
     <Link
       href={path}
       className={cx(
-        "text-white hover:text-[#ff8fe7] px-6 py-4 border-b border-[#f4f4f4]",
+        "text-white hover:text-pink_primary px-6 py-4 border-b border-[#f4f4f4]",
         "flex items-center gap-4",
-        { "!text-[#ff8fe7]": router.pathname === path }
+        { "!text-pink_primary": router.pathname === path }
       )}
     >
       <Icon size={25} />
