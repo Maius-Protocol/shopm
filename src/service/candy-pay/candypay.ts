@@ -2,8 +2,8 @@ import { CandyPay } from "@candypay/checkout-sdk";
 import { getShopPayment } from "../database/payment";
 import shop from "@pages/api/shop";
 
-export const getSdk =  async (shopId: string) => {
-  const shopPayment = await getShopPayment(shopId)
+export const getSdk = async (shopId: string) => {
+  const shopPayment = await getShopPayment(shopId);
   if (shopPayment) {
     return new CandyPay({
       api_keys: {
@@ -16,7 +16,7 @@ export const getSdk =  async (shopId: string) => {
       },
     });
   }
-  return null
-}
+  return null;
+};
 
 export default getSdk;
