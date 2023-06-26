@@ -1,6 +1,8 @@
+import { useRouter } from "next/router";
+
 import {
   CreatorPagesLayout,
-  ProductsInfoCard,
+  ProductInfoCard,
   ProductsTable,
   ProductType,
 } from "../../../components/creator";
@@ -51,20 +53,24 @@ const data: ProductType[] = [
 ];
 
 const CreatorProducts = () => {
+  const router = useRouter();
+
   return (
     <CreatorPagesLayout
       header="Products"
       headerButton={{
         text: "Add Product",
-        onClickFn: () => {},
+        onClickFn: () => {
+          router.push("/creator/products/new");
+        },
       }}
     >
       <div className="space-y-[64px]">
         <div className="flex gap-4">
-          <ProductsInfoCard title="Revenue" amount={0} isDollar />
-          <ProductsInfoCard title="Customers" amount={0} />
-          <ProductsInfoCard title="Active Members" amount={0} />
-          <ProductsInfoCard title="MRR" amount={0} isDollar />
+          <ProductInfoCard title="Revenue" amount={0} isDollar />
+          <ProductInfoCard title="Customers" amount={0} />
+          <ProductInfoCard title="Active Members" amount={0} />
+          <ProductInfoCard title="MRR" amount={0} isDollar />
         </div>
         <div className="space-y-4">
           <h2 className="text-black text-2xl">Products</h2>

@@ -7,7 +7,7 @@ interface CardProps {
   isDollar?: boolean;
 }
 
-export const ProductsInfoCard: FC<CardProps> = ({
+export const ProductInfoCard: FC<CardProps> = ({
   title,
   amount,
   isDollar = false,

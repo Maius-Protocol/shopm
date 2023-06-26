@@ -39,7 +39,9 @@ export const CreatorPagesLayout: FC<CreatorPagesLayoutProps> = ({
             </button>
           )}
         </Header>
-        <Content className="p-[64px]">{children}</Content>
+        <Content>
+          <div className="p-[64px]">{children}</div>
+        </Content>
       </Layout>
     </Layout>
   );
