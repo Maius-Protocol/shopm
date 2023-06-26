@@ -24,9 +24,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200).json(shop);
       }
       default:
-        break;
+        return res.status(200);
     }
-    return;
   } catch (error) {
     res.status(500).json({ message: "Internal server error", error: error });
     return;

@@ -1,11 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import sdk, { getSdk } from "../../service/candy-pay/candypay";
 import { getProduct } from "../../service/database/product";
+import verifyEmailTemplate from "../../template/verifyTemplate";
+import { sendEmail } from "../../service/mail/mail";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     try {
-      const { productId } = req.body;
+      const { productId } = JSON.parse(req.body);
       const product = await getProduct(productId);
       const sdk = await getSdk(product!.shop_id);
       const response = await sdk!.session.create({
@@ -26,6 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       res.status(200).json(response);
     } catch (error) {
+      console.log(error);
       res.status(500).json({
         error: "Error creating session",
       });

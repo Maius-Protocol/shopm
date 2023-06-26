@@ -14,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const body = JSON.parse(req.body);
         const { shopId, productId, sessionId, status } = body;
         const order = await createOrder(shopId, productId, sessionId, status);
-        res.status(200).json(order);
+        return res.status(200).json(order);
       }
       case "GET": {
         if (req.query.id) {
@@ -31,12 +31,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       case "PUT": {
         const { id, ...updateData } = req.body;
         const order = await updateOrder(id, updateData);
-        res.status(200).json(order);
+        return res.status(200).json(order);
       }
       default:
-        break;
+        return res.status(200);
     }
-    return;
   } catch (error) {
     res.status(500).json({ message: "Internal server error", error: error });
     return;
