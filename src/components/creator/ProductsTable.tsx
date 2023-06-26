@@ -1,33 +1,43 @@
 import { FC } from "react";
-import { Table } from "antd";
+import { Avatar, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { RiDeleteBin5Fill } from "react-icons/ri";
+import { ProductTableName } from "@components/creator/ProductTableName";
 
 export interface ProductType {
   id: string;
   name: string;
-  sales: number;
-  revenue: number;
+  image: string;
+  sale: number;
+  quantity: number;
   price: number;
 }
 
 const productsColumns: ColumnsType<ProductType> = [
   {
-    title: "Name",
-    dataIndex: "name",
-    render: (name: string) => <p className="font-bold">{name}</p>,
-    width: "40%",
+    title: "",
+    dataIndex: "image",
+    render: (image: string) => <Avatar size={64} src={image} />,
+    width: "10%",
   },
   {
-    title: "Sales",
-    dataIndex: "sales",
-    render: (sales: number) => <p className="underline">{sales}</p>,
+    title: "Name",
+    dataIndex: "name",
+    render: (name: string, record) => (
+      <ProductTableName name={name} url={record.id}></ProductTableName>
+    ),
+    width: "30%",
+  },
+  {
+    title: "Sale",
+    dataIndex: "id",
+    render: (sale: number) => <p>0</p>,
     width: "15%",
   },
   {
-    title: "Revenue",
-    dataIndex: "revenue",
-    render: (revenue: number) => <p>${revenue}</p>,
+    title: "Quantity",
+    dataIndex: "quantity",
+    render: (quantity: number) => <p>{quantity}</p>,
     width: "15%",
   },
   {
@@ -46,5 +56,5 @@ const productsColumns: ColumnsType<ProductType> = [
 ];
 
 export const ProductsTable: FC<{ data: ProductType[] }> = ({ data }) => {
-  return <Table columns={productsColumns} dataSource={data} />;
+  return <Table columns={productsColumns} dataSource={data} rowKey="id" />;
 };

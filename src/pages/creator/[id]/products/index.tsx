@@ -5,55 +5,28 @@ import {
   ProductInfoCard,
   ProductsTable,
   ProductType,
-} from "../../../components/creator";
-
-const data: ProductType[] = [
-  {
-    id: "1",
-    name: "Product 1",
-    sales: 0,
-    revenue: 0,
-    price: 0,
-  },
-  {
-    id: "2",
-    name: "Product 2",
-    sales: 0,
-    revenue: 0,
-    price: 0,
-  },
-  {
-    id: "3",
-    name: "Product 3",
-    sales: 0,
-    revenue: 0,
-    price: 0,
-  },
-  {
-    id: "4",
-    name: "Product 4",
-    sales: 0,
-    revenue: 0,
-    price: 0,
-  },
-  {
-    id: "5",
-    name: "Product 5",
-    sales: 0,
-    revenue: 0,
-    price: 0,
-  },
-  {
-    id: "6",
-    name: "Product 6",
-    sales: 0,
-    revenue: 0,
-    price: 0,
-  },
-];
+} from "@components/creator";
+import { useEffect, useState } from "react";
 
 const CreatorProducts = () => {
   const router = useRouter();
+  const { id } = router.query;
+
+  const [data, setData] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const getData = async () => {
+      setLoading(true);
+      const responseProduct = await fetch(`/api/shop/product?shop_id=${id}`, {
+        method: "GET",
+      });
+      const products = await responseProduct.json();
+      setData(products);
+      setLoading(false);
+    };
+    getData();
+  }, []);
 
   return (
     <CreatorPagesLayout
@@ -61,7 +34,7 @@ const CreatorProducts = () => {
       headerButton={{
         text: "Add Product",
         onClickFn: () => {
-          router.push("/creator/products/new");
+          router.push(`/creator/${id}/products/new`);
         },
       }}
     >
@@ -70,7 +43,6 @@ const CreatorProducts = () => {
           <ProductInfoCard title="Revenue" amount={0} isDollar />
           <ProductInfoCard title="Customers" amount={0} />
           <ProductInfoCard title="Active Members" amount={0} />
-          <ProductInfoCard title="MRR" amount={0} isDollar />
         </div>
         <div className="space-y-4">
           <h2 className="text-black text-2xl">Products</h2>
