@@ -1,64 +1,69 @@
 import { Header } from "@components/Header";
-
+import { Card } from "antd";
 import { ProductCard } from "@components/products";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
-const products = [
-  {
-    id: "1",
-    title: "Product 1",
-    creator: "Owner 1",
-    price: 99,
-  },
-  {
-    id: "2",
-    title: "Product 2",
-    creator: "Owner 2",
-    price: 199,
-  },
-  {
-    id: "3",
-    title: "Product 3",
-    creator: "Owner 3",
-    price: 299,
-  },
-  {
-    id: "4",
-    title: "Product 4",
-    creator: "Owner 4",
-    price: 399,
-  },
-  {
-    id: "5",
-    title: "Product 5",
-    creator: "Owner 5",
-    price: 499,
-  },
-  {
-    id: "6",
-    title: "Product 6",
-    creator: "Owner 6",
-    price: 599,
-  },
-];
+interface ProductData {
+  id: string;
+  name: string;
+  shop: string;
+  price: number;
+  image?: string;
+}
 
 const Products = () => {
+  const [products, setProducts] = useState<ProductData[]>([]);
+  const [isLoading, setLoading] = useState(false);
+  let productList: ProductData[] = [];
+  useEffect(() => {
+    const getData = async () => {
+      setLoading(true);
+      const responseProduct = await fetch(`/api/shop/product`, {
+        method: "GET",
+      });
+      const data = await responseProduct.json();
+      await Promise.all(
+        data.map(async (p: any) => {
+          const responseShop = await fetch(`/api/shop?id=${p.shop_id}`, {
+            method: "GET",
+          });
+          const shop = await responseShop.json();
+          productList!.push({
+            id: p.id,
+            name: p.name,
+            shop: shop.name,
+            price: p.price,
+            image: p.image,
+          });
+        })
+      );
+      setProducts(productList);
+      setLoading(false);
+    };
+    getData();
+  }, []);
+
   return (
     <>
       <Header />
       <div className="py-[64px]">
         <div className="max-w-[1140px] mx-auto space-y-6">
           <h2 className="text-black text-2xl">All Products</h2>
-          <div className="grid grid-cols-5 gap-4">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                title={product.title}
-                price={product.price}
-                creator={product.creator}
-                buyFn={() => {}}
-              />
-            ))}
-          </div>
+          <Card style={{ width: "100%", padding: "20px" }}>
+            <div className="grid grid-cols-5 gap-4">
+              {products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  image={product.image}
+                  price={product.price}
+                  shop={product.shop}
+                />
+              ))}
+            </div>
+          </Card>
         </div>
       </div>
     </>

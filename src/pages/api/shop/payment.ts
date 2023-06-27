@@ -15,20 +15,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           candyPayPublicKey,
           candyPayPrivateKey
         );
-        res.status(200).json(shop);
+        return res.status(200).json(shop);
       }
       case "PUT": {
         // Update an existing user
         const { id, ...updateData } = req.body;
         const shop = await updateShopPayment(id, updateData);
-        res.status(200).json(shop);
+        return res.status(200).json(shop);
       }
       default:
         return res.status(200);
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", error: error });
-    return;
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error });
   }
 };
 

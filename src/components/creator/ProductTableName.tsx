@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { Space, Avatar } from "antd";
+import Link from "next/link";
 
 interface ProductTableNameProps {
   name: string;
@@ -7,11 +8,15 @@ interface ProductTableNameProps {
 }
 
 export const ProductTableName: FC<ProductTableNameProps> = ({ name, url }) => {
-  console.log(name);
   return (
     <Space direction={"vertical"}>
-      <div>{name}</div>
-      <div>{url}</div>
+      <div className="text-black text-base">{name}</div>
+      <Link
+        href={`/products`}
+        className="text-gray-400 hover:text-gray-500 text-sm underline underline-offset-1"
+      >
+        Go to product
+      </Link>
     </Space>
   );
 };

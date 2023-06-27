@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { Result, Button } from "antd";
 
 const Success: NextPage = () => {
   return (
@@ -11,7 +12,16 @@ const Success: NextPage = () => {
         flexDirection: "column",
       }}
     >
-      <h1>Your payment is successful!</h1>
+      <Result
+        status="success"
+        title="Successfully Purchased With Shopm!"
+        subTitle="Your order takes 1-5 minutes, please wait."
+        extra={[
+          <Button key="buy" href={"/products"}>
+            Buy Again
+          </Button>,
+        ]}
+      />
     </div>
   );
 };

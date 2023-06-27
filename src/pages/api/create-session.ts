@@ -3,16 +3,17 @@ import sdk, { getSdk } from "../../service/candy-pay/candypay";
 import { getProduct } from "../../service/database/product";
 import verifyEmailTemplate from "../../template/verifyTemplate";
 import { sendEmail } from "../../service/mail/mail";
+import * as process from "process";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     try {
       const { productId } = JSON.parse(req.body);
       const product = await getProduct(productId);
-      const sdk = await getSdk(product!.shop_id);
+      const sdk = await getSdk();
       const response = await sdk!.session.create({
-        success_url: "http://localhost:3000/success",
-        cancel_url: "http://localhost:3000/cancel",
+        success_url: `${process.env.URL}/success`,
+        cancel_url: `${process.env.URL}/cancel`,
         // additional tokens you can pass, SOL and USDC are default
         tokens: ["bonk", "samo"],
         items: [

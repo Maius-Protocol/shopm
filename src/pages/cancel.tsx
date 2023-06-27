@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-
+import { Result, Button } from "antd";
 const Cancel: NextPage = () => {
   return (
     <div
@@ -11,9 +11,17 @@ const Cancel: NextPage = () => {
         flexDirection: "column",
       }}
     >
-      <h1>
-        Forgot to add something to your cart? Shop around then come back to pay!
-      </h1>
+      <Result
+        status="error"
+        title="Payment Failed"
+        subTitle="Please check and modify the following information before resubmitting."
+        extra={[
+          <Button key="buy" href={"/products"}>
+            Buy Again
+          </Button>,
+        ]}
+      ></Result>
+      ,
     </div>
   );
 };

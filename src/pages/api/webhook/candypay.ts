@@ -8,6 +8,8 @@ import {
 } from "../../../service/database/order";
 import verifyEmailTemplate from "../../../template/verifyTemplate";
 import { onErrorResumeNext } from "rxjs";
+import product from "@pages/api/shop/product";
+import { getProduct } from "../../../service/database/product";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const headers = req.headers;
@@ -22,6 +24,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       // const orders = await getOrderBySessionId(payload.session_id);
       const orderId = payload.order_id;
+      const orders = await getOrderBySessionId(payload.session_id);
+      let attachments: { filename: string; path: string }[] = [];
+      await Promise.all(
+        orders.map(async (order) => {
+          const product = await getProduct(order.product_id);
+          let filename = product!.link_s3.substring(
+            product!.link_s3.lastIndexOf("/") + 1
+          );
+          let path = product!.link_s3;
+          attachments.push({
+            filename: filename,
+            path: path,
+          });
+        })
+      );
 
       //SEND VERIFICATION MAIL TO USER
       const emailTemplate = verifyEmailTemplate(payload.items, orderId);
@@ -30,8 +47,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         to: payload.customer_email,
         subject: `Order ${orderId} confirmed`,
         html: emailTemplate.html,
+        attachments: attachments,
       });
-      const orders = await getOrderBySessionId(payload.session_id);
       await Promise.all(
         orders.map(async (order) => {
           const orderNew = await updateOrder(order.id, { status: "success" });

@@ -1,6 +1,6 @@
 const Constants = {
   APP_NAME: "Shopm",
-  CDN_URL: "https://cdn.shopm/",
+  CDN_URL: "https://cdn.maius.fun/",
   IMAGE_SIZE: 3000,
 };
 
