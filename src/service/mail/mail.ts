@@ -8,6 +8,7 @@ export interface MailInterface {
   subject: string;
   text?: string;
   html: string;
+  attachments?: any[];
 }
 
 export const sendEmail = async (
@@ -34,6 +35,7 @@ export const sendEmail = async (
     subject: options.subject,
     text: options.text,
     html: options.html,
+    attachments: options.attachments,
   });
 
   return info;

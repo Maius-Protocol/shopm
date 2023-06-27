@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import cx from "classnames";
@@ -15,23 +15,28 @@ interface SiderItemProps {
 }
 
 export const CreatorSidebar = () => {
+  const router = useRouter();
+  const { id } = router.query;
   return (
     <Sider className="!bg-black h-full">
       <header className="uppercase py-12 px-6 border-b border-[#f4f4f4]">
-        <Link href="/creator" className="text-white hover:text-white text-4xl">
+        <Link
+          href={`/creator/${id}`}
+          className="text-white hover:text-white text-4xl"
+        >
           Shopm
         </Link>
       </header>
       <div>
-        <SiderItem name="Home" path="/creator" Icon={RiHome2Fill} />
+        <SiderItem name="Home" path={`/creator/${id}`} Icon={RiHome2Fill} />
         <SiderItem
           name="Products"
-          path="/creator/products"
+          path={`/creator/${id}/products`}
           Icon={RiArchiveFill}
         />
         <SiderItem
           name="Settings"
-          path="/creator/settings"
+          path={`/creator/${id}/settings`}
           Icon={RiSettings4Fill}
         />
       </div>

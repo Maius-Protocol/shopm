@@ -79,7 +79,6 @@ const EditorModule = {
 const CreatorNewProduct = () => {
   const router = useRouter();
   const { id } = router.query;
-  console.log(id);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [editorHtml, setEditorHtml] = useState("");
@@ -88,6 +87,7 @@ const CreatorNewProduct = () => {
   const [fileUploadThumbnail, setFileUploadThumbnail] = useState<
     any | undefined
   >();
+  const [messageApi, contextHolder] = message.useMessage();
 
   // handler upload data
   const { Dragger } = Upload;
@@ -123,44 +123,55 @@ const CreatorNewProduct = () => {
   };
 
   const createProduct = async () => {
-    const uploadFileDataResponse = await fetch("/api/shop/product/upload", {
-      method: "POST",
-      body: JSON.stringify({
-        name: fileUploadData!.name,
-        type: fileUploadData!.type,
-      }),
-    });
-    const uploadFileThumbnailResponse = await fetch(
-      "/api/shop/product/upload",
-      {
+    try {
+      const formData1 = new FormData();
+      formData1.append("filename", fileUploadData.originFileObj);
+      const uploadFileDataResponse = await fetch("/api/shop/product/upload", {
+        method: "POST",
+        body: formData1,
+      });
+      const formData2 = new FormData();
+      formData2.append("filename", fileUploadThumbnail.originFileObj);
+      const uploadFileThumbnailResponse = await fetch(
+        "/api/shop/product/upload",
+        {
+          method: "POST",
+          body: formData2,
+        }
+      );
+      const uploadFileData = await uploadFileDataResponse.json();
+      const uploadFileThumbnail = await uploadFileThumbnailResponse.json();
+
+      const category = productTypes.filter((type) => (type.id = typeId!))[0];
+      const createProductResponse = await fetch("/api/shop/product", {
         method: "POST",
         body: JSON.stringify({
-          name: fileUploadThumbnail!.name,
-          type: fileUploadThumbnail!.type,
+          shopId: id,
+          name: name,
+          description: editorHtml,
+          category: category.name,
+          price: price,
+          quantity: "10",
+          image: uploadFileThumbnail.url,
+          linkS3: uploadFileData.url,
         }),
-      }
-    );
-    const uploadFileData = await uploadFileDataResponse.json();
-    const uploadFileThumbnail = await uploadFileThumbnailResponse.json();
-    const category = productTypes.filter((type) => (type.id = typeId!))[0];
-    const createProductResponse = await fetch("/api/shop/product", {
-      method: "POST",
-      body: JSON.stringify({
-        shopId: id,
-        name: name,
-        description: editorHtml,
-        category: category.name,
-        price: price,
-        quantity: "10",
-        image: uploadFileThumbnail.url,
-        linkS3: uploadFileData.url,
-      }),
-    });
-    router.push(`/creator/${id}/products`);
+      });
+      messageApi.open({
+        type: "success",
+        content: "Upload product successfully",
+      });
+    } catch (e) {
+      messageApi.open({
+        type: "error",
+        content: "Upload product failed",
+      });
+    }
+    // router.push(`/creator/${id}/products`);
   };
 
   return (
     <CreatorPagesLayout header="Adding new product">
+      {contextHolder}
       <div className="flex gap-[64px]">
         <div className="flex-[1] space-y-6">
           <p className="text-black">
