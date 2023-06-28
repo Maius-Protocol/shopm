@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     switch (req.method) {
       case "POST": {
-        const { email, name, publicKey } = req.body;
+        const { name, email, publicKey } = JSON.parse(req.body);
         const shop = await createShop(email, name, publicKey);
         return res.status(200).json(shop);
       }
