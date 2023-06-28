@@ -1,5 +1,6 @@
 # Shopm - an e-commerce platform with Candy Pay checkout
-![abc](https://github.com/Maius-Protocol/shopm/assets/39359294/8421e18d-3f7f-49c2-8b28-06909cbdc10e)
+![Group 3](https://github.com/Maius-Protocol/shopm/assets/39359294/2ac0415b-15db-443f-874d-d8ad3f7c4a93)
+
 ## Getting Started
 1. Get an API key from [Helius](https://helius.xyz/). We'll need this to be able to fetch wallet details.
 2. Get an API key from [Candy Pay](https://helius.xyz/). We'll need this to be able to fetch wallet details.
