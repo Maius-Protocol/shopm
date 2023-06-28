@@ -1,5 +1,5 @@
 import { Header } from "@components/Header";
-import { Card } from "antd";
+import { Card, Breadcrumb } from "antd";
 import { ProductCard } from "@components/products";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -49,8 +49,24 @@ const Products = () => {
       <Header />
       <div className="py-[64px]">
         <div className="max-w-[1140px] mx-auto space-y-6">
-          <h2 className="text-black text-2xl">All Products</h2>
-          <Card style={{ width: "100%", padding: "20px" }}>
+          <Breadcrumb
+            items={[
+              {
+                title: <a href="">Digital Image</a>,
+              },
+              {
+                title: <a href="">Book</a>,
+              },
+              {
+                title: <a href="">Video</a>,
+              },
+            ]}
+          />
+          <h2 className="text-black text-2xl">Best selling products</h2>
+          <Card
+            style={{ width: "100%", minHeight: "500px", padding: "20px" }}
+            loading={isLoading}
+          >
             <div className="grid grid-cols-5 gap-4">
               {products.map((product) => (
                 <ProductCard

@@ -13,38 +13,7 @@ export function Menu({ twitterHandle, className }: Props) {
 
   return (
     <ul className={menuClasses}>
-      {connected && (
-        <>
-          {twitterHandle && (
-            <li className="rounded-box">
-              <a
-                href={`https://www.twitter.com/${twitterHandle}`}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-ghost lg:btn mb-1 lg:mr-1 lg:mb-0"
-              >
-                @{twitterHandle}
-              </a>
-            </li>
-          )}
-          <li>
-            <label
-              htmlFor="bonk-modal"
-              className="btn-ghost lg:btn mb-1 lg:mr-1 lg:mb-0"
-            >
-              Send $Bonk
-            </label>
-          </li>
-          <li>
-            <label
-              htmlFor="sol-modal"
-              className="btn-ghost lg:btn mb-1 lg:mr-1 lg:mb-0"
-            >
-              Send SOL
-            </label>
-          </li>
-        </>
-      )}
+      {connected}
       <WalletMultiButton className="btn" />
     </ul>
   );

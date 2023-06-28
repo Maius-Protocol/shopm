@@ -1,24 +1,21 @@
 import { useWallet } from "@solana/wallet-adapter-react";
-import React from "react";
-import { fetcher, useDataFetch } from "@utils/use-data-fetch";
-import { ItemList } from "@components/home/item-list";
+import React, { useEffect, useState } from "react";
+import { useDataFetch } from "@utils/use-data-fetch";
 import { ItemData } from "@components/home/item";
 import { Button, ButtonState } from "@components/home/button";
 import { toast } from "react-hot-toast";
-import { Transaction } from "@solana/web3.js";
-import { SignCreateData } from "@pages/api/sign/create";
-import { SignValidateData } from "@pages/api/sign/validate";
+import { ed25519 } from "@noble/curves/ed25519";
+import { useRouter } from "next/router";
 
 export function HomeContent() {
-  const { publicKey, signTransaction } = useWallet();
+  const router = useRouter();
+  const { publicKey, signMessage, signTransaction } = useWallet();
+  const [shopId, setShopId] = useState("");
   const [signState, setSignState] = React.useState<ButtonState>("initial");
-  const { data, error } = useDataFetch<Array<ItemData>>(
-    publicKey && signState === "success" ? `/api/items/${publicKey}` : null
-  );
   const prevPublickKey = React.useRef<string>(publicKey?.toBase58() || "");
 
   // Reset the state if wallet changes or disconnects
-  React.useEffect(() => {
+  useEffect(() => {
     if (publicKey && publicKey.toBase58() !== prevPublickKey.current) {
       prevPublickKey.current === publicKey.toBase58();
       setSignState("initial");
@@ -26,42 +23,39 @@ export function HomeContent() {
   }, [publicKey]);
 
   // This will request a signature automatically but you can have a separate button for that
-  React.useEffect(() => {
+  useEffect(() => {
     async function sign() {
       if (publicKey && signTransaction && signState === "initial") {
         setSignState("loading");
         const signToastId = toast.loading("Signing message...");
-
         try {
-          // Request signature tx from server
-          const { tx: createTx } = await fetcher<SignCreateData>(
-            "/api/sign/create",
-            {
-              method: "POST",
-              body: JSON.stringify({
-                publicKeyStr: publicKey.toBase58(),
-              }),
-              headers: { "Content-type": "application/json; charset=UTF-8" },
-            }
-          );
+          // `publicKey` will be null if the wallet isn't connected
+          if (!publicKey) throw new Error("Wallet not connected!");
+          // `signMessage` will be undefined if the wallet doesn't support it
+          if (!signMessage)
+            throw new Error("Wallet does not support message signing!");
 
-          const tx = Transaction.from(Buffer.from(createTx, "base64"));
-
-          // Request signature from wallet
-          const signedTx = await signTransaction(tx);
-
-          // Validate signed transaction
-          await fetcher<SignValidateData>("/api/sign/validate", {
+          // Encode anything as bytes
+          const message = new TextEncoder().encode("Hello, world!");
+          // Sign the bytes using the wallet
+          const signature = await signMessage(message);
+          // Verify that the bytes were signed using the private key that matches the known public key
+          if (!ed25519.verify(signature, message, publicKey.toBytes()))
+            throw new Error("Invalid signature!");
+          const createShopResponse = await fetch("/api/shop", {
             method: "POST",
             body: JSON.stringify({
-              signedTx: signedTx.serialize().toString("base64"),
+              name: "shopOne",
+              email: "",
+              publicKey: publicKey.toBase58(),
             }),
-            headers: { "Content-type": "application/json; charset=UTF-8" },
           });
-
+          const shop = await createShopResponse.json();
+          setShopId(shop.id);
           setSignState("success");
           toast.success("Message signed", { id: signToastId });
         } catch (error: any) {
+          console.log(error);
           setSignState("error");
           toast.error("Error verifying wallet, please reconnect wallet", {
             id: signToastId,
@@ -77,25 +71,19 @@ export function HomeContent() {
     setSignState("initial");
   };
 
-  if (error) {
-    return (
-      <p className="text-center p-4">
-        Failed to load items, please try connecting again
-      </p>
-    );
-  }
+  const goShop = () => {
+    router.push(`/creator/${shopId}`);
+  };
 
-  if (publicKey && signState === "success" && !data) {
-    return <p className="text-center p-4">Loading wallet information...</p>;
-  }
-
-  const hasFetchedData = publicKey && signState === "success" && data;
+  const hasFetchedData = publicKey && signState === "success";
 
   return (
     <div className="grid grid-cols-1">
       {hasFetchedData ? (
-        <div>
-          <ItemList items={data} />
+        <div className="text-center p-4">
+          <Button state={signState} onClick={goShop} className="btn-primary">
+            Go to shop
+          </Button>
         </div>
       ) : (
         <div className="text-center">
@@ -103,7 +91,7 @@ export function HomeContent() {
             <div className="card border-2 border-primary mb-5">
               <div className="card-body items-center">
                 <h2 className="card-title text-center text-primary mb-2">
-                  Please connect your wallet to get a list of your NFTs
+                  Please connect your wallet to get a create shop
                 </h2>
               </div>
             </div>
