@@ -42,15 +42,25 @@ export function HomeContent() {
           // Verify that the bytes were signed using the private key that matches the known public key
           if (!ed25519.verify(signature, message, publicKey.toBytes()))
             throw new Error("Invalid signature!");
-          const createShopResponse = await fetch("/api/shop", {
-            method: "POST",
-            body: JSON.stringify({
-              name: "shopOne",
-              email: "",
-              publicKey: publicKey.toBase58(),
-            }),
-          });
-          const shop = await createShopResponse.json();
+          const getShopResponse = await fetch(
+            `/api/shop?publicKey=${publicKey.toBase58()}`,
+            {
+              method: "GET",
+            }
+          );
+          let shop = await getShopResponse.json();
+          if (shop === null) {
+            const createShopResponse = await fetch("/api/shop", {
+              method: "POST",
+              body: JSON.stringify({
+                name: "",
+                email: "",
+                publicKey: publicKey.toBase58(),
+              }),
+            });
+
+            shop = await createShopResponse.json();
+          }
           setShopId(shop.id);
           setSignState("success");
           toast.success("Message signed", { id: signToastId });
