@@ -1,7 +1,5 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import React, { useEffect, useState } from "react";
-import { useDataFetch } from "@utils/use-data-fetch";
-import { ItemData } from "@components/home/item";
 import { Button, ButtonState } from "@components/home/button";
 import { toast } from "react-hot-toast";
 import { ed25519 } from "@noble/curves/ed25519";

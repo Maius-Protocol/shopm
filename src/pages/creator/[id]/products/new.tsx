@@ -96,22 +96,27 @@ const CreatorNewProduct = () => {
   const propData: UploadProps = {
     name: "file",
     multiple: false,
-    action: "http://localhost:3000",
+    action: process.env.URL,
     accept: ".png,.jpeg,.jpg,.mp4,.pdf",
     maxCount: 1,
+    beforeUpload(file) {
+      const isLt5M = file.size / 1024 / 1024 < 5;
+      if (!isLt5M) {
+        messageApi.open({
+          type: "error",
+          content: "Image must smaller than 2MB!",
+        });
+      }
+      return isLt5M;
+    },
     onChange(info) {
       const { status } = info.file;
-      if (status !== "uploading") {
-      }
       if (status === "done") {
         setFileUploadData(info.file);
         message.success(`${info.file.name} file uploaded successfully.`);
       } else if (status === "error") {
         message.error(`${info.file.name} file upload failed.`);
       }
-    },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
     },
   };
 

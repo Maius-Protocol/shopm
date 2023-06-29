@@ -54,7 +54,7 @@ export function ProductThumbnail({ handleThumbnailFile }: Props) {
   return (
     <>
       <Upload
-        action="http://localhost:3000"
+        action={process.env.URL}
         listType="picture-card"
         onPreview={handlePreview}
         onChange={handleChangeThumbnail}
