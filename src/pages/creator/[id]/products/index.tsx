@@ -11,14 +11,13 @@ import { useEffect, useState } from "react";
 const CreatorProducts = () => {
   const router = useRouter();
   const { id } = router.query;
-
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
-      const responseProduct = await fetch(`/api/shop/product?shop_id=${id}`, {
+      const responseProduct = await fetch(`/api/shop/product?shopId=${id}`, {
         method: "GET",
       });
       const products = await responseProduct.json();

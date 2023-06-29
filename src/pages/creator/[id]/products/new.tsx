@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Input, Upload, message, UploadFile, Modal } from "antd";
-import { InboxOutlined, PlusOutlined } from "@ant-design/icons";
-import type { RcFile, UploadProps } from "antd/es/upload";
+import { Input, Upload, message, Skeleton } from "antd";
+import { InboxOutlined } from "@ant-design/icons";
+import type { UploadProps } from "antd/es/upload";
 import {
   RiFolderOpenFill,
   RiBook2Fill,
@@ -79,6 +79,7 @@ const EditorModule = {
 const CreatorNewProduct = () => {
   const router = useRouter();
   const { id } = router.query;
+  const [isLoading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [editorHtml, setEditorHtml] = useState("");
@@ -101,7 +102,6 @@ const CreatorNewProduct = () => {
     onChange(info) {
       const { status } = info.file;
       if (status !== "uploading") {
-        console.log(info.file, info.fileList);
       }
       if (status === "done") {
         setFileUploadData(info.file);
@@ -124,6 +124,7 @@ const CreatorNewProduct = () => {
 
   const createProduct = async () => {
     try {
+      setLoading(true);
       const formData1 = new FormData();
       formData1.append("filename", fileUploadData.originFileObj);
       const uploadFileDataResponse = await fetch("/api/shop/product/upload", {
@@ -156,11 +157,14 @@ const CreatorNewProduct = () => {
           linkS3: uploadFileData.url,
         }),
       });
+      setLoading(false);
       messageApi.open({
         type: "success",
         content: "Upload product successfully",
       });
     } catch (e) {
+      console.log(e);
+      setLoading(false);
       messageApi.open({
         type: "error",
         content: "Upload product failed",
@@ -182,68 +186,70 @@ const CreatorNewProduct = () => {
           </p>
         </div>
         <div className="flex-[3] space-y-6">
-          <div className="space-y-2">
-            <p className="text-black text-lg">Name</p>
-            <Input
-              placeholder="Name of product"
-              size="large"
-              className="rounded border-black"
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <p className="text-black text-lg">Type</p>
-            <div className="grid grid-cols-3 gap-4">
-              {productTypes.map((type) => (
-                <ProductTypeCard
-                  name={type.name}
-                  description={type.description}
-                  isSelected={type.id === typeId}
-                  Icon={type.Icon}
-                  iconColor={type.iconColor}
-                  onClick={() => setTypeId(type.id)}
-                  key={type.id}
-                />
-              ))}
+          <Skeleton loading={isLoading} active>
+            <div className="space-y-2">
+              <p className="text-black text-lg">Name</p>
+              <Input
+                placeholder="Name of product"
+                size="large"
+                className="rounded border-black"
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
-          </div>
-          <div className="space-y-2">
-            <p className="text-black text-lg">Description</p>
-            <ReactQuill
-              theme={"snow"}
-              onChange={handleChangeEditor}
-              value={editorHtml}
-              modules={EditorModule}
-              formats={EditorFormat}
-              placeholder={"Writing something..."}
-            />
-          </div>
-          <div className="space-y-2">
-            <p className="text-black text-lg">Thumbnail</p>
-            <ProductThumbnail
-              handleThumbnailFile={callbackThumbnailFunction}
-            ></ProductThumbnail>
-          </div>
-          <div className="space-y-2">
-            <p className="text-black text-lg">Upload</p>
-            <Dragger {...propData}>
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text">Upload image, pdf or video</p>
-            </Dragger>
-          </div>
+            <div className="space-y-2">
+              <p className="text-black text-lg">Type</p>
+              <div className="grid grid-cols-3 gap-4">
+                {productTypes.map((type) => (
+                  <ProductTypeCard
+                    name={type.name}
+                    description={type.description}
+                    isSelected={type.id === typeId}
+                    Icon={type.Icon}
+                    iconColor={type.iconColor}
+                    onClick={() => setTypeId(type.id)}
+                    key={type.id}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <p className="text-black text-lg">Description</p>
+              <ReactQuill
+                theme={"snow"}
+                onChange={handleChangeEditor}
+                value={editorHtml}
+                modules={EditorModule}
+                formats={EditorFormat}
+                placeholder={"Writing something..."}
+              />
+            </div>
+            <div className="space-y-2">
+              <p className="text-black text-lg">Thumbnail</p>
+              <ProductThumbnail
+                handleThumbnailFile={callbackThumbnailFunction}
+              ></ProductThumbnail>
+            </div>
+            <div className="space-y-2">
+              <p className="text-black text-lg">Upload</p>
+              <Dragger {...propData}>
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined />
+                </p>
+                <p className="ant-upload-text">Upload image, pdf or video</p>
+              </Dragger>
+            </div>
 
-          <div className="space-y-2">
-            <p className="text-black text-lg">Price</p>
-            <Input
-              placeholder="Price your product"
-              size="large"
-              prefix={<RiMoneyDollarCircleLine />}
-              className="rounded border-black"
-              onChange={(e) => setPrice(e.target.value)}
-            />
-          </div>
+            <div className="space-y-2">
+              <p className="text-black text-lg">Price</p>
+              <Input
+                placeholder="Price your product"
+                size="large"
+                prefix={<RiMoneyDollarCircleLine />}
+                className="rounded border-black"
+                onChange={(e) => setPrice(e.target.value)}
+              />
+            </div>
+          </Skeleton>
           <button
             onClick={createProduct}
             className="bg-pink_primary px-4 py-3 text-black border border-black rounded"

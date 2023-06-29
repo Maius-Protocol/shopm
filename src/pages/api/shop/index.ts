@@ -31,7 +31,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
       case "PUT": {
         // Update an existing user
-        const { id, ...updateData } = req.body;
+        const { id, ...updateData } = JSON.parse(req.body);
         const shop = await updateShop(id, updateData);
         return res.status(200).json(shop);
       }

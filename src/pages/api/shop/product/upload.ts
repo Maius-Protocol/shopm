@@ -51,7 +51,7 @@ export const parseForm = async (
   return new Promise(async (resolve, reject) => {
     const form = formidable({
       maxFiles: 1,
-      maxFileSize: 1024 * 1024, // 1mb
+      maxFileSize: 5 * 1024 * 1024, // 1mb
     });
     form.parse(req, function (errorParseFile, fields, files) {
       if (errorParseFile) resolve({ errorParseFile, fields, files });
