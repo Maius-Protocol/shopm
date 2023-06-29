@@ -96,7 +96,6 @@ const CreatorNewProduct = () => {
   const propData: UploadProps = {
     name: "file",
     multiple: false,
-    action: process.env.URL,
     accept: ".png,.jpeg,.jpg,.mp4,.pdf",
     maxCount: 1,
     beforeUpload(file) {
@@ -236,7 +235,13 @@ const CreatorNewProduct = () => {
             </div>
             <div className="space-y-2">
               <p className="text-black text-lg">Upload</p>
-              <Dragger {...propData}>
+              <Dragger
+                customRequest={({ file, onSuccess }) => {
+                  // @ts-ignore
+                  onSuccess("Ok");
+                }}
+                {...propData}
+              >
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
                 </p>

@@ -54,12 +54,15 @@ export function ProductThumbnail({ handleThumbnailFile }: Props) {
   return (
     <>
       <Upload
-        action={process.env.URL}
         listType="picture-card"
         onPreview={handlePreview}
         onChange={handleChangeThumbnail}
         accept=".png,.jpeg,.jpg"
         maxCount={1}
+        customRequest={({ file, onSuccess }) => {
+          // @ts-ignore
+          onSuccess("Ok");
+        }}
       >
         {fileListThumbnail.length >= 1 ? null : uploadButton}
       </Upload>
